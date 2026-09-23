@@ -1,0 +1,17 @@
+# Smeti operacijskega sistema
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+desktop.ini
+.DS_Store
+$RECYCLE.BIN/
+
+# Nastavitve razvojnega okolja
+.claude/
+.vscode/
+.idea/
+
+# Začasne datoteke
+*.tmp
+*.log
+*~

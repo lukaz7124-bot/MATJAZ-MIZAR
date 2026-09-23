@@ -1,0 +1,29 @@
+{
+  "name": "Mizarske storitve in montaža, Matjaž Pesjak s.p.",
+  "short_name": "Mizarstvo Pesjak",
+  "description": "Pohištvo po meri, vgradne omare, stopnice, lesene obloge in montaža. Paka 44, 3205 Vitanje.",
+  "lang": "sl",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#F7F4ED",
+  "theme_color": "#0C0B09",
+  "icons": [
+    {
+      "src": "assets/img/logo-mizarstvo-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/img/logo-mizarstvo-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/img/logo-mizarstvo-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

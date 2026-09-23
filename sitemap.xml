@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- DEPLOY STEP: zamenjaj domeno in posodobi <lastmod> ob vsaki večji spremembi. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+  <url>
+    <loc>https://www.mizarstvo-pesjak.si/</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://www.mizarstvo-pesjak.si/assets/img/hero-mizarska-miza-1536.webp</image:loc>
+      <image:title>Mizarska delovna miza z orodjem</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.mizarstvo-pesjak.si/assets/img/jedilna-miza-hrast-masiva-kotna-klop-1400.webp</image:loc>
+      <image:title>Jedilna miza iz masivnega hrasta s kotno klopjo</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.mizarstvo-pesjak.si/assets/img/stopnice-hrast-masiva-po-meri-1400.webp</image:loc>
+      <image:title>Stopnice s hrastovimi nastopnimi ploščami</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.mizarstvo-pesjak.si/assets/img/vgradna-omara-po-meri-predsoba-1400.webp</image:loc>
+      <image:title>Vgradna omara po meri v predsobi</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.mizarstvo-pesjak.si/assets/img/kopalnisko-pohistvo-po-meri-umivalnik-1400.webp</image:loc>
+      <image:title>Kopalniško pohištvo po meri</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.mizarstvo-pesjak.si/assets/img/lesen-nadstresek-z-lamelno-oblogo-1400.webp</image:loc>
+      <image:title>Lesen nadstrešek z lamelno oblogo</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.mizarstvo-pesjak.si/assets/img/lesena-ograja-po-meri-vitanje-1400.webp</image:loc>
+      <image:title>Lesena ograja po meri</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://www.mizarstvo-pesjak.si/assets/img/postelja-po-meri-nocne-omarice-led-osvetlitev-1400.webp</image:loc>
+      <image:title>Postelja po meri z nočnimi omaricami</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://www.mizarstvo-pesjak.si/zasebnost.html</loc>
+    <lastmod>2026-09-22</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+</urlset>

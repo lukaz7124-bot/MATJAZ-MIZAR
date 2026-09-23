@@ -1,0 +1,8 @@
+# robots.txt — Mizarske storitve in montaža, Matjaž Pesjak s.p.
+# DEPLOY STEP: zamenjaj domeno, če bo drugačna od spodnje.
+
+User-agent: *
+Allow: /
+Disallow: /assets/orig/
+
+Sitemap: https://www.mizarstvo-pesjak.si/sitemap.xml
