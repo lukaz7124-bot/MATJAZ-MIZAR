@@ -1,0 +1,9 @@
+# Kaj se NE objavi na spletu (ostane pa v repozitoriju).
+
+# Izvirne, nepomanjšane fotografije — na strežniku jih nihče ne potrebuje,
+# prihranijo pa okoli 7 MB pri vsaki objavi.
+assets/orig/
+
+# Strežnik za lokalni predogled in navodila za urejanje
+tools/
+BERI-ME.md

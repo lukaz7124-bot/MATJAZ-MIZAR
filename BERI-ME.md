@@ -20,7 +20,9 @@ assets/
   img/                vse slike, pripravljene v dveh velikostih (800 in 1400 px)
   video/              dva posnetka (delavnica, dnevna soba)
   orig/               izvirne, nepomanjšane fotografije — NE nalagaj na strežnik
-server.js             samo za lokalni predogled — NE nalagaj na strežnik
+vercel.json           pove Vercelu, da je to statična stran (ne aplikacija)
+.vercelignore         kaj se ne objavi (izvirne fotografije, orodja)
+tools/server.js       samo za lokalni predogled — NE nalagaj na strežnik
 .claude/              nastavitve razvojnega okolja — NE nalagaj na strežnik
 BERI-ME.md            ta datoteka
 ```
@@ -28,6 +30,12 @@ BERI-ME.md            ta datoteka
 **Na strežnik naložiš:** `index.html`, `zasebnost.html`, `robots.txt`,
 `sitemap.xml`, `site.webmanifest` in celotno mapo `assets/` **brez podmape
 `assets/orig/`**. Skupaj približno 6,5 MB.
+
+> **Pozor pri Vercelu:** `server.js` mora ostati v `tools/`, ne v korenu.
+> Ko je bil v korenu, ga je Vercel prepoznal kot strežniško aplikacijo
+> (`framework: node`) in namesto strani objavil njega — stran se je pokazala
+> brez oblikovanja in brez slik. Datoteka `vercel.json` to zdaj izrecno
+> prepoveduje.
 
 ---
 
@@ -69,7 +77,7 @@ Prejšnje naslovne fotografije so ostale v galeriji oziroma v `assets/orig/`.
 ## 3. Lokalni predogled
 
 ```bash
-node server.js
+node tools/server.js
 ```
 
 Nato odpri `http://localhost:4173`.

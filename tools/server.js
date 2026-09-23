@@ -1,12 +1,14 @@
 // -----------------------------------------------------------------------
 // Preprost statični strežnik SAMO za lokalni predogled.
 // Te datoteke NE nalagaj na spletni strežnik — objavljena stran je statična.
-// Zagon:  node server.js   ->   http://localhost:4173
+// Živi v tools/, ker jo je Vercel, ko je bila v korenu, prepoznal kot
+// strežniško aplikacijo in namesto strani objavil njo.
+// Zagon:  node tools/server.js   ->   http://localhost:4173
 // Parameter ?nomotion=1 začasno izklopi upoštevanje prefers-reduced-motion,
 // da se animacije vidijo tudi, kadar ima Windows izklopljene učinke animacije.
 // -----------------------------------------------------------------------
 const http = require('http'), fs = require('fs'), path = require('path'), url = require('url');
-const root = __dirname, port = 4173;
+const root = path.join(__dirname, ".."), port = 4173;
 const types = { '.html':'text/html; charset=utf-8', '.css':'text/css; charset=utf-8', '.js':'text/javascript; charset=utf-8',
   '.webp':'image/webp', '.png':'image/png', '.jpg':'image/jpeg', '.mp4':'video/mp4', '.xml':'application/xml',
   '.txt':'text/plain; charset=utf-8', '.webmanifest':'application/manifest+json', '.svg':'image/svg+xml' };
