@@ -34,7 +34,6 @@
   --sage-ink:   #4E6A3A;
   --sage-hi:    #8FAE79;
   --sage-bg:    #E9F0E2;
-  --sage-deep:  #1A2415;   /* ozadje temno zelene sekcije */
 
   --brass:      #7A5C0C;   /* medenina – okovje */
   --brass-ink:  #7A5C0C;
@@ -45,6 +44,8 @@
   --clay-ink:  #9C4A2F;
   --clay-hi:   #E08A6B;
   --clay-bg:   #F8E8E2;
+
+  --walnut-deep: #211710; /* ozadje sekcije Materiali (temni oreh) */
 
   --red:       #B42318;   /* številke v števcih (6,6:1 na beli) */
 
@@ -118,13 +119,13 @@ a:hover { color: var(--blue-ink); }
 .on-dark a:not(.btn),
 .section--dark a:not(.btn),
 .section--ink a:not(.btn),
-.section--sage a:not(.btn),
+.section--walnut a:not(.btn),
 .footer a:not(.btn) { color: var(--blue-hi); }
 
 .on-dark a:not(.btn):hover,
 .section--dark a:not(.btn):hover,
 .section--ink a:not(.btn):hover,
-.section--sage a:not(.btn):hover,
+.section--walnut a:not(.btn):hover,
 .footer a:not(.btn):hover { color: var(--paper); }
 
 /* Viden fokus na vsakem elementu, s katerim se da upravljati */
@@ -136,10 +137,10 @@ a:hover { color: var(--blue-ink); }
 .on-dark :focus-visible,
 .section--ink :focus-visible,
 .section--dark :focus-visible,
-.section--sage :focus-visible,
+.section--walnut :focus-visible,
 .footer :focus-visible,
 .drawer :focus-visible { outline-color: var(--blue-hi); }
-.section--sage :focus-visible { outline-color: var(--sage-hi); }
+.section--walnut :focus-visible { outline-color: var(--logo); }
 
 ::selection { background: var(--blue); color: var(--white); }
 
@@ -179,7 +180,7 @@ p  { margin: 0 0 var(--space-2); text-wrap: pretty; }
 .on-dark .lead,
 .section--ink .lead,
 .section--dark .lead,
-.section--sage .lead,
+.section--walnut .lead,
 .footer .lead,
 .drawer .lead { color: var(--muted-dark); }
 
@@ -197,7 +198,7 @@ p  { margin: 0 0 var(--space-2); text-wrap: pretty; }
 .on-dark .eyebrow,
 .section--ink .eyebrow,
 .section--dark .eyebrow,
-.section--sage .eyebrow,
+.section--walnut .eyebrow,
 .footer .eyebrow,
 .drawer .eyebrow { color: var(--blue-hi); }
 .eyebrow::before {
@@ -246,13 +247,13 @@ p  { margin: 0 0 var(--space-2); text-wrap: pretty; }
   .section--ink .card:hover { border-color: rgba(230, 225, 214, 0.32); box-shadow: none; }
 }
 
-/* Temna sekcija v gozdni zeleni – prekine zaporedje črnih ploskev */
-.section--sage {
-  background: var(--sage-deep);
+/* Temna sekcija v barvi temnega oreha – med dvema svetlima razdelkoma */
+.section--walnut {
+  background: var(--walnut-deep);
   color: var(--paper-dim);
 }
-.section--sage h2, .section--sage h3 { color: var(--paper); }
-.section--sage .eyebrow { color: var(--sage-hi); }
+.section--walnut h2, .section--walnut h3 { color: var(--paper); }
+.section--walnut .eyebrow { color: var(--logo); }
 
 .section-head { max-width: 62ch; margin-bottom: var(--space-5); }
 .section-head--center { margin-inline: auto; text-align: center; }
@@ -272,7 +273,7 @@ p  { margin: 0 0 var(--space-2); text-wrap: pretty; }
 }
 .section--dark.grain::after,
 .section--ink.grain::after,
-.section--sage.grain::after { opacity: 0.05; }
+.section--walnut.grain::after { opacity: 0.05; }
 
 /* ---------- 5. Gumbi ---------------------------------------------------- */
 .btn {
@@ -1137,7 +1138,7 @@ p  { margin: 0 0 var(--space-2); text-wrap: pretty; }
               background-color 300ms var(--ease-out);
 }
 @media (hover: hover) and (pointer: fine) {
-  .material:hover { transform: translateY(-4px); border-color: var(--sage-hi); background: rgba(255, 255, 255, 0.08); }
+  .material:hover { transform: translateY(-4px); border-color: var(--logo); background: rgba(255, 255, 255, 0.08); }
 }
 /* Fotografija pravega vzorca lesa čez vso širino kartice */
 .material__img {
