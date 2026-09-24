@@ -131,10 +131,22 @@
 
   if ('IntersectionObserver' in window) {
     var revealObserver = new IntersectionObserver(function (entries, obs) {
+      var galleryStep = 0;
       entries.forEach(function (entry) {
         if (!entry.isIntersecting) return;
-        markRevealed(entry.target);
-        obs.unobserve(entry.target);
+        var el = entry.target;
+        // Sličice galerije, ki vstopijo hkrati (ena vrsta), se pojavijo ena za
+        // drugo. Zamik velja samo za pojav, zato ga po koncu odstranimo.
+        if (el.classList.contains('gallery__item') && !reduced) {
+          el.style.transitionDelay = Math.min(galleryStep++, 5) * 70 + 'ms';
+          el.addEventListener('transitionend', function clearDelay(e) {
+            if (e.target !== el) return;
+            el.style.transitionDelay = '';
+            el.removeEventListener('transitionend', clearDelay);
+          });
+        }
+        markRevealed(el);
+        obs.unobserve(el);
       });
       // Prag mora biti 0: pri odstotnem pragu se visok element (npr. mreža
       // enajstih kartic) na nizkem oknu nikoli ne razkrije, ker v vidno polje
@@ -333,6 +345,14 @@
   var filters = $$('.filter');
   var status = $('#galerija-stanje');
   var visibleItems = items.slice();
+  var canAnimate = typeof Element.prototype.animate === 'function';
+  var easeOut = getComputedStyle(document.documentElement).getPropertyValue('--ease-out').trim() ||
+                'cubic-bezier(0.23, 1, 0.32, 1)';
+
+  function inViewport(el) {
+    var r = el.getBoundingClientRect();
+    return r.width > 0 && r.bottom > 0 && r.top < window.innerHeight;
+  }
 
   function applyFilter(cat) {
     visibleItems = [];
@@ -345,6 +365,18 @@
       status.textContent = 'Prikazanih ' + visibleItems.length +
         (visibleItems.length === 1 ? ' fotografija.' : ' fotografij.');
     }
+    // Namesto skoka se izbrane fotografije pojavijo ena za drugo. Samo tiste,
+    // ki so že bile razkrite in so na zaslonu — ostale razkrije drsenje.
+    if (reduced || !canAnimate) return;
+    var step = 0;
+    visibleItems.forEach(function (item) {
+      if (!item.hasAttribute('data-visible') || !inViewport(item)) return;
+      item.getAnimations().forEach(function (a) { a.cancel(); });
+      item.animate([
+        { opacity: 0, transform: 'translateY(12px) scale(0.96)' },
+        { opacity: 1, transform: 'none' }
+      ], { duration: 280, delay: Math.min(step++, 7) * 40, easing: easeOut, fill: 'backwards' });
+    });
   }
 
   filters.forEach(function (btn) {
@@ -363,39 +395,127 @@
   var lbNext     = $('#lb-next');
   var lbIndex    = 0;
   var lbOpener   = null;
+  var lbToken    = 0;
+
+  // Velikost slike izračunamo sami iz razmerja stranic. Tako predogled
+  // (800 px, že v predpomnilniku) in ostrejša slika (1400 px) zasedeta
+  // enako ploskev in zamenjava vira po nalaganju ne povzroči skoka.
+  function fitLightboxImage(ratio) {
+    if (!ratio || !isFinite(ratio)) ratio = 1;
+    var maxW = Math.min(1100, document.documentElement.clientWidth - 32);
+    var maxH = Math.min(window.innerHeight, document.documentElement.clientHeight) - 150;
+    var w = maxW, h = w / ratio;
+    if (h > maxH) { h = maxH; w = h * ratio; }
+    lbImg.style.width = Math.round(w) + 'px';
+    lbImg.style.height = Math.round(h) + 'px';
+  }
 
   function showAt(index) {
     if (!visibleItems.length) return;
     lbIndex = (index + visibleItems.length) % visibleItems.length;
     var item = visibleItems[lbIndex];
     var thumb = $('img', item);
-    lbImg.src = item.getAttribute('data-full');
+    var full = item.getAttribute('data-full');
+    var token = ++lbToken;
+
+    // Najprej takoj pokaži predogled, nato ga tiho zamenjaj z ostrejšo sliko.
+    if (thumb && thumb.complete && thumb.naturalWidth) {
+      fitLightboxImage(thumb.naturalWidth / thumb.naturalHeight);
+      lbImg.src = thumb.currentSrc || thumb.src;
+    } else {
+      lbImg.src = full;
+    }
+    var hi = new Image();
+    hi.onload = function () {
+      if (token !== lbToken) return;           // medtem že druga fotografija
+      fitLightboxImage(hi.naturalWidth / hi.naturalHeight);
+      lbImg.src = full;
+    };
+    hi.src = full;
+
     lbImg.alt = thumb ? thumb.alt : '';
     lbCaption.textContent = item.getAttribute('data-caption') || '';
     lbCounter.textContent = '(' + (lbIndex + 1) + ' / ' + visibleItems.length + ')';
   }
 
+  // Slika zraste iz sličice, na katero je obiskovalec kliknil, in se ob
+  // zapiranju vrne vanjo (FLIP). Obrezava s clip-path posnema object-fit:
+  // cover sličice, zato na začetku leta slika točno prekrije sličico.
+  function zoomFrames(item) {
+    var from = item.getBoundingClientRect();
+    var to = lbImg.getBoundingClientRect();
+    if (!from.width || !to.width) return null;
+    var s = Math.max(from.width / to.width, from.height / to.height);
+    var dx = (from.left + from.width / 2) - (to.left + to.width / 2);
+    var dy = (from.top + from.height / 2) - (to.top + to.height / 2);
+    var ix = Math.max(0, (to.width * s - from.width) / 2 / s);
+    var iy = Math.max(0, (to.height * s - from.height) / 2 / s);
+    return [
+      { transform: 'translate(' + dx + 'px, ' + dy + 'px) scale(' + s + ')',
+        clipPath: 'inset(' + iy + 'px ' + ix + 'px round ' + (8 / s) + 'px)' },
+      { transform: 'none', clipPath: 'inset(0px 0px round 8px)' }
+    ];
+  }
+
+  function stopImageAnimations() {
+    if (canAnimate) lbImg.getAnimations().forEach(function (a) { a.cancel(); });
+  }
+
   function openLightbox(item) {
     if (!lightbox) return;
+    stopImageAnimations();
     lbOpener = item;
     lightbox.hidden = false;
     showAt(visibleItems.indexOf(item));
     window.requestAnimationFrame(function () {
       lightbox.setAttribute('data-open', '');
       document.body.style.overflow = 'hidden';
-      lbClose.focus();
+      lbClose.focus({ preventScroll: true });
+      // Mere šele po zaklepu drsenja: skriti drsnik premakne stran (in
+      // sličico) za svojo širino, let mora začeti tam, kjer je sličica zdaj.
+      var frames = !reduced && canAnimate ? zoomFrames(item) : null;
+      if (frames) {
+        lbImg.animate(frames, { duration: 380, easing: easeOut });
+      } else if (canAnimate) {
+        lbImg.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, easing: easeOut });
+      }
     });
   }
 
   function closeLightbox() {
-    if (!lightbox) return;
-    lightbox.removeAttribute('data-open');
+    if (!lightbox || !lightbox.hasAttribute('data-open')) return;
+    var item = visibleItems[lbIndex];
+    stopImageAnimations();
     document.body.style.overflow = '';
-    window.setTimeout(function () {
-      if (!lightbox.hasAttribute('data-open')) { lightbox.hidden = true; lbImg.src = ''; }
-    }, 260);
-    if (lbOpener) lbOpener.focus();
+    // Nazaj v sličico samo, če je ta na zaslonu; sicer slika le zbledi.
+    var frames = !reduced && canAnimate && item && inViewport(item) ? zoomFrames(item) : null;
+    lightbox.removeAttribute('data-open');
+
+    function done() {
+      if (lightbox.hasAttribute('data-open')) return;  // medtem ponovno odprta
+      lightbox.hidden = true;
+      stopImageAnimations();
+      lbImg.src = '';
+    }
+    if (frames) {
+      lbImg.animate([frames[1], frames[0]], { duration: 280, easing: easeOut, fill: 'forwards' })
+        .finished.then(done, function () {});
+    } else if (canAnimate) {
+      lbImg.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: reduced ? 'none' : 'scale(0.96)' }],
+                    { duration: 200, easing: easeOut, fill: 'forwards' })
+        .finished.then(done, function () {});
+    } else {
+      window.setTimeout(done, 280);
+    }
+    var back = item && inViewport(item) ? item : lbOpener;
+    if (back) back.focus({ preventScroll: true });
   }
+
+  window.addEventListener('resize', function () {
+    if (lightbox && lightbox.hasAttribute('data-open') && lbImg.naturalWidth) {
+      fitLightboxImage(lbImg.naturalWidth / lbImg.naturalHeight);
+    }
+  });
 
   items.forEach(function (item) {
     item.addEventListener('click', function () { openLightbox(item); });
