@@ -46,6 +46,8 @@
   --clay-hi:   #E08A6B;
   --clay-bg:   #F8E8E2;
 
+  --red:       #B42318;   /* številke v števcih (6,6:1 na beli) */
+
   /* --- Tipografija ------------------------------------------------------- */
   /* Alfa Slab One: težek plošcati serif – deluje kot vžgan pečat v les.
      Uporabljen samo za h1 in h2, ker je premočan za drobne naslove.
@@ -766,14 +768,9 @@ p  { margin: 0 0 var(--space-2); text-wrap: pretty; }
 }
 .stat__label { font-size: 0.88rem; color: var(--muted); margin-top: 0.4rem; }
 
-/* Vsaka številka v svoji barvi – enako kot kartice storitev */
-.stat--sage .stat__num { color: var(--sage-ink); }
-.stat--brass   .stat__num { color: var(--brass-ink); }
-.stat--clay  .stat__num { color: var(--clay-ink); }
-.stat--sage { border-top: 3px solid var(--sage); }
-.stat--brass   { border-top: 3px solid var(--brass); }
-.stat--clay  { border-top: 3px solid var(--clay); }
-.stat--blue  { border-top: 3px solid var(--blue); }
+/* Vse številke v isti rdeči (6,6:1 na beli) */
+.stat { border-top: 3px solid var(--red); }
+.stat .stat__num { color: var(--red); }
 
 /* ---------- 11. Storitve ------------------------------------------------- */
 /* 11 storitev + kartica s pozivom = 12, kar se razdeli brez luknje
