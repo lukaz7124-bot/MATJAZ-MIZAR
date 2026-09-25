@@ -1167,10 +1167,6 @@ try{if(!sessionStorage.getItem('mp-uvod'))h.classList.add('js-intro','pl-wait');
 
       <div class="reveal">
         <form class="form" id="povprasevanje" novalidate>
-          <!-- DEPLOY STEP: dostopni ključ Web3Forms (web3forms.com → vpiši e-naslov
-               podjetja → ključ pride po e-pošti). Ključ je javen po zasnovi: z njim
-               je mogoče poslati sporočilo samo na ta e-naslov. Prilepi ga v value. -->
-          <input type="hidden" name="access_key" value="">
           <h3 class="mb-1">Povpraševanje za ponudbo</h3>
           <p class="form__intro">
             Izpolnite, kar veste. Ostalo uskladimo po telefonu.
@@ -1246,17 +1242,18 @@ try{if(!sessionStorage.getItem('mp-uvod'))h.classList.add('js-intro','pl-wait');
             <input type="text" id="spletna-stran" name="spletna-stran" tabindex="-1" autocomplete="off">
           </div>
 
-          <button class="btn btn--primary btn--lg w-full" type="submit" id="form-submit">
+          <button class="btn btn--primary btn--lg w-full" type="submit">
             Pošlji povpraševanje
           </button>
 
-          <div class="form__ok" id="form-ok" role="status" tabindex="-1">
-            <strong>Hvala za vaše povpraševanje!</strong> Kmalu vas bomo kontaktirali.
+          <div class="form__ok" id="form-ok" role="status">
+            Odpira se vaš e-poštni program z izpolnjenim sporočilom — za oddajo ga je treba še poslati.
+            Če se ni odprl, nas kar pokličite na <a href="tel:+38631425703" class="tel">031 425 703</a>.
           </div>
 
           <p class="form__note">
-            Obrazec deluje brez piškotkov. Podatki se prek storitve Web3Forms pošljejo
-            neposredno na naš e-naslov, uporabimo pa jih samo za odgovor na povpraševanje.
+            Obrazec deluje brez piškotkov in brez strežnika: podatki se prepišejo
+            v vaš e-poštni program, mi pa jih uporabimo samo za odgovor na povpraševanje.
           </p>
         </form>
       </div>
