@@ -307,6 +307,9 @@ p  { margin: 0 0 var(--space-2); text-wrap: pretty; }
     color 200ms ease;
 }
 .btn:active { transform: scale(0.97); }
+/* Med pošiljanjem obrazca: zaklenjen, brez dviga in odseva */
+.btn:disabled { cursor: progress; opacity: 0.8; transform: none !important; box-shadow: var(--shadow-sm) !important; }
+.btn:disabled::after { display: none; }
 .btn svg { width: 20px; height: 20px; flex: none; }
 
 @media (hover: hover) and (pointer: fine) {

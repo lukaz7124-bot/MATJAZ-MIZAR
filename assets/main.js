@@ -680,11 +680,12 @@
 
   /* ---------------------------------------------------------------------
      14. Obrazec za povpraševanje
-         Brez strežnika: po preverjanju sestavimo e-poštno sporočilo.
-         Napake se izpišejo ob polju in v povzetku na vrhu obrazca.
+         Po preverjanju ga brskalnik pošlje storitvi Web3Forms, ki ga posreduje
+         na e-naslov, povezan z dostopnim ključem (skrito polje access_key v
+         index.html). Lastnega strežnika ni. Napake polj se izpišejo ob polju
+         in v povzetku na vrhu obrazca, napaka pošiljanja pa v istem povzetku.
      --------------------------------------------------------------------- */
-  // DEPLOY STEP: vpiši pravi e-naslov naročnika (isti kot v razdelku Kontakt).
-  var PREJEMNIK = 'matjaz.mizarstvo@gmail.com';
+  var WEB3FORMS_URL = 'https://api.web3forms.com/submit';
 
   var form = $('#povprasevanje');
 
@@ -692,6 +693,44 @@
     var summary = $('#form-summary');
     var summaryList = $('#form-summary-list');
     var okBox = $('#form-ok');
+    var submitBtn = $('#form-submit');
+    var submitLabel = submitBtn ? submitBtn.textContent.trim() : '';
+    var sending = false;
+
+    // Povzetek na vrhu obrazca: seznam vrstic, vsaka je besedilo ali povezava
+    function showSummary(rows) {
+      if (summaryList) {
+        summaryList.innerHTML = '';
+        rows.forEach(function (row) {
+          var li = document.createElement('li');
+          li.appendChild(row);
+          summaryList.appendChild(li);
+        });
+      }
+      if (okBox) okBox.removeAttribute('data-show');
+      if (summary) { summary.setAttribute('data-show', ''); summary.focus(); }
+    }
+
+    function setSending(on) {
+      sending = on;
+      if (!submitBtn) return;
+      submitBtn.disabled = on;
+      submitBtn.setAttribute('aria-busy', on ? 'true' : 'false');
+      submitBtn.textContent = on ? 'Pošiljam…' : submitLabel;
+    }
+
+    function showSendError() {
+      var p = document.createElement('span');
+      p.appendChild(document.createTextNode(
+        'Pošiljanje ni uspelo. Preverite internetno povezavo in poskusite znova ali nas pokličite na '));
+      var tel = document.createElement('a');
+      tel.href = 'tel:+38631425703';
+      tel.textContent = '031 425 703';
+      tel.style.color = 'inherit';
+      p.appendChild(tel);
+      p.appendChild(document.createTextNode('.'));
+      showSummary([p]);
+    }
 
     var rules = [
       { id: 'ime',       label: 'Ime in priimek', test: function (v) { return v.trim().length >= 2; } },
@@ -725,6 +764,7 @@
 
     form.addEventListener('submit', function (e) {
       e.preventDefault();
+      if (sending) return;                    // prepreči dvojno pošiljanje
 
       // Past za robote: če je skrito polje izpolnjeno, tiho ne naredimo nič
       var honeypot = $('#spletna-stran');
@@ -741,51 +781,79 @@
       });
 
       if (napake.length) {
-        if (summaryList) {
-          summaryList.innerHTML = '';
-          napake.forEach(function (n) {
-            var li = document.createElement('li');
-            var a = document.createElement('a');
-            a.href = '#' + n.id;
-            a.textContent = n.label;
-            a.style.color = 'inherit';
-            a.addEventListener('click', function (ev) {
-              ev.preventDefault();
-              var t = document.getElementById(n.id);
-              if (t) t.focus();
-            });
-            li.appendChild(a);
-            summaryList.appendChild(li);
+        showSummary(napake.map(function (n) {
+          var a = document.createElement('a');
+          a.href = '#' + n.id;
+          a.textContent = n.label;
+          a.style.color = 'inherit';
+          a.addEventListener('click', function (ev) {
+            ev.preventDefault();
+            var t = document.getElementById(n.id);
+            if (t) t.focus();
           });
-        }
-        if (summary) { summary.setAttribute('data-show', ''); summary.focus(); }
-        if (okBox) okBox.removeAttribute('data-show');
+          return a;
+        }));
         return;
       }
 
       if (summary) summary.removeAttribute('data-show');
+      if (okBox) okBox.removeAttribute('data-show');
 
       var v = function (id) { var el = document.getElementById(id); return el ? el.value.trim() : ''; };
+      var key = form.elements.access_key ? form.elements.access_key.value.trim() : '';
 
-      var zadeva = 'Povpraševanje s spletne strani — ' + v('storitev');
-      var telo = [
-        'Ime in priimek: ' + v('ime'),
-        'Telefon: ' + v('telefon'),
-        'E-pošta: ' + (v('email') || '—'),
-        'Kraj objekta: ' + (v('kraj') || '—'),
-        'Storitev: ' + v('storitev'),
-        '',
-        'Opis projekta:',
-        v('sporocilo'),
-        '',
-        '— poslano z www.mizarstvo-pesjak.si'
-      ].join('\n');
+      if (!key || !window.fetch) {
+        if (!key && window.console) console.error('Obrazec: manjka dostopni ključ Web3Forms (access_key v index.html).');
+        showSendError();
+        return;
+      }
 
-      window.location.href = 'mailto:' + PREJEMNIK +
-        '?subject=' + encodeURIComponent(zadeva) +
-        '&body=' + encodeURIComponent(telo);
+      // Imena polj so hkrati oznake v e-pošti, ki jo prejme podjetje
+      var podatki = {
+        access_key: key,
+        subject: 'Povpraševanje s spletne strani — ' + v('storitev'),
+        from_name: 'Spletna stran Mizarstvo Pesjak',
+        'Ime in priimek': v('ime'),
+        'Telefon': v('telefon'),
+        'E-pošta': v('email') || '—',
+        'Kraj objekta': v('kraj') || '—',
+        'Storitev': v('storitev'),
+        'Opis projekta': v('sporocilo')
+      };
+      // Z e-naslovom stranke lahko podjetje na povpraševanje kar odgovori
+      if (v('email')) podatki.replyto = v('email');
 
-      if (okBox) okBox.setAttribute('data-show', '');
+      setSending(true);
+      var ctrl = window.AbortController ? new AbortController() : null;
+      var timer = ctrl ? window.setTimeout(function () { ctrl.abort(); }, 15000) : null;
+
+      fetch(WEB3FORMS_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(podatki),
+        signal: ctrl ? ctrl.signal : undefined
+      })
+        .then(function (res) {
+          return res.json().catch(function () { return {}; }).then(function (data) {
+            if (!res.ok || !data.success) throw new Error(data.message || ('HTTP ' + res.status));
+          });
+        })
+        .then(function () {
+          form.reset();
+          rules.forEach(function (rule) {
+            var el = document.getElementById(rule.id);
+            if (el) { el.removeAttribute('aria-invalid'); var f = el.closest('.field'); if (f) f.removeAttribute('data-invalid'); }
+          });
+          if (okBox) { okBox.setAttribute('data-show', ''); okBox.focus(); }
+        })
+        .catch(function (err) {
+          if (window.console) console.error('Obrazec: pošiljanje ni uspelo —', err && err.message);
+          showSendError();
+        })
+        .then(function () {
+          if (timer) window.clearTimeout(timer);
+          setSending(false);
+        });
     });
   }
 

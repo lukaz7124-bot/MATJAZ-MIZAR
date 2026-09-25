@@ -114,10 +114,9 @@ try{if(!sessionStorage.getItem('mp-uvod'))h.classList.add('js-intro','pl-wait');
 
       <h3>2.1 Povpraševanje prek obrazca</h3>
       <p>
-        Obrazec na tej strani <strong>ne pošilja podatkov na noben strežnik</strong>. Ko ga
-        izpolnite in potrdite, se vpisana vsebina prepiše v vaš lasten e-poštni program,
-        sporočilo pa pošljete sami. Podatke tako prejmemo v svoj e-poštni predal,
-        enako kot če bi nam pisali neposredno.
+        Ko obrazec izpolnite in potrdite, se vpisani podatki prek storitve za pošiljanje
+        obrazcev <a href="https://web3forms.com/privacy" target="_blank" rel="noopener">Web3Forms</a>
+        pošljejo v naš e-poštni predal. Podatke prejmemo enako, kot če bi nam pisali neposredno.
       </p>
       <table>
         <thead>
@@ -169,10 +168,13 @@ try{if(!sessionStorage.getItem('mp-uvod'))h.classList.add('js-intro','pl-wait');
       </p>
       <ul>
         <li>ponudnik gostovanja spletne strani in e-pošte (tehnično vzdrževanje),</li>
+        <li>Web3Forms, storitev, ki sporočila iz obrazca za povpraševanje posreduje na naš e-naslov,</li>
         <li>računovodski servis (izdaja in knjiženje računov),</li>
         <li>podizvajalec, kadar je za izvedbo naročila potreben (npr. dostava ali specifična obdelava) — samo podatki, ki so za to nujni,</li>
         <li>pristojni državni organi, če to zahteva zakon.</li>
       </ul>
+      <!-- DEPLOY STEP: preveri pri Web3Forms (in Googlu za Gmail), kje obdelujeta podatke;
+           če izven EGP, ta stavek dopolni s podlago za prenos (npr. standardne pogodbene klavzule). -->
       <p>Podatkov ne prenašamo izven Evropskega gospodarskega prostora.</p>
 
       <h2 id="pravice">5. Vaše pravice</h2>
@@ -248,7 +250,7 @@ try{if(!sessionStorage.getItem('mp-uvod'))h.classList.add('js-intro','pl-wait');
       <h2 id="varnost">7. Varnost</h2>
       <ul>
         <li>Stran deluje prek šifrirane povezave HTTPS.</li>
-        <li>Obrazec nima strežniškega dela, zato na spletni strani ni shranjene baze osebnih podatkov, ki bi jo bilo mogoče vdreti.</li>
+        <li>Obrazec se pošlje prek šifrirane povezave neposredno v naš e-poštni predal; na spletni strani ni shranjene baze osebnih podatkov, ki bi jo bilo mogoče vdreti.</li>
         <li>Obrazec vsebuje preprosto zaščito pred roboti (skrito polje), ki prepreči večino samodejnega pošiljanja.</li>
         <li>Zunanje povezave se odpirajo z zaščito <code>rel="noopener"</code>.</li>
         <li>E-poštni predal in naprave so zaščiteni z geslom, dostop ima samo lastnik podjetja.</li>
