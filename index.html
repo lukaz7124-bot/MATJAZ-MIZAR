@@ -1242,12 +1242,12 @@ try{if(!sessionStorage.getItem('mp-uvod'))h.classList.add('js-intro','pl-wait');
             <input type="text" id="spletna-stran" name="spletna-stran" tabindex="-1" autocomplete="off">
           </div>
 
-          <button class="btn btn--primary btn--lg w-full" type="submit">
-            Pošlji povpraševanje
+          <button class="btn btn--primary btn--lg w-full" type="submit" value="gmail">
+            Pošlji prek Gmaila
           </button>
 
           <div class="form__ok" id="form-ok" role="status">
-            <p>Odpira se vaš e-poštni program z izpolnjenim sporočilom — za oddajo ga je treba še poslati.</p>
+            <p id="ok-lead">Odpira se vaš e-poštni program z izpolnjenim sporočilom — za oddajo ga je treba še poslati.</p>
             <!-- Rezerva za računalnike brez nastavljenega e-poštnega programa:
                  povezave napolni main.js z istim sporočilom kot mailto. -->
             <p class="form__fallback">
@@ -1260,8 +1260,9 @@ try{if(!sessionStorage.getItem('mp-uvod'))h.classList.add('js-intro','pl-wait');
           </div>
 
           <p class="form__note">
-            Obrazec deluje brez piškotkov in brez strežnika: podatki se prepišejo
-            v vaš e-poštni program, mi pa jih uporabimo samo za odgovor na povpraševanje.
+            Ob kliku se odpre Gmail z že pripravljenim sporočilom — samo kliknite »Pošlji«.
+            Obrazec ničesar ne shranjuje. Uporabljate drug e-poštni program?
+            <button type="submit" class="form__copy" value="mailto">Odpri v e-poštnem programu</button>
           </p>
         </form>
       </div>

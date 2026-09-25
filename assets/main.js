@@ -723,6 +723,13 @@
       });
     });
 
+    // Kateri gumb je oddal obrazec (za brskalnike brez e.submitter)
+    var lastVia = 'gmail';
+    $$('button[type="submit"]', form).forEach(function (b) {
+      b.addEventListener('click', function () { lastVia = b.value || 'gmail'; });
+    });
+    var finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
 
@@ -788,13 +795,27 @@
       // Rezerva: veliko računalnikov z Windows nima nastavljenega e-poštnega
       // programa in mailto tam ne naredi ničesar. Zato isto sporočilo ponudimo
       // še v spletnem Gmailu in Outlooku ter za kopiranje.
+      var gmailUrl = 'https://mail.google.com/mail/?view=cm&fs=1&to=' + to + '&su=' + su + '&body=' + bo;
+      var mailtoUrl = 'mailto:' + PREJEMNIK + '?subject=' + su + '&body=' + bo;
       var gmail = $('#ok-gmail');
       var outlook = $('#ok-outlook');
-      if (gmail) gmail.href = 'https://mail.google.com/mail/?view=cm&fs=1&to=' + to + '&su=' + su + '&body=' + bo;
+      var lead = $('#ok-lead');
+      if (gmail) gmail.href = gmailUrl;
       if (outlook) outlook.href = 'https://outlook.live.com/mail/0/deeplink/compose?to=' + to + '&subject=' + su + '&body=' + bo;
       zadnjeSporocilo = 'Za: ' + PREJEMNIK + '\nZadeva: ' + zadeva + '\n\n' + telo;
 
-      window.location.href = 'mailto:' + PREJEMNIK + '?subject=' + su + '&body=' + bo;
+      // Glavni gumb odpre Gmailovo okno za pisanje v novem zavihku. Na telefonu
+      // spletni Gmail izpolnjena polja izgubi, zato tam (in na izrecno željo)
+      // odpremo e-poštno aplikacijo — na Androidu je to Gmail.
+      var via = (e.submitter && e.submitter.value) || lastVia;
+      if (via === 'mailto' || !finePointer.matches) {
+        window.location.href = mailtoUrl;
+        if (lead) lead.textContent = 'Odpira se vaš e-poštni program z izpolnjenim sporočilom — preverite ga in kliknite »Pošlji«.';
+      } else {
+        var win = window.open(gmailUrl, '_blank');
+        if (win) win.opener = null; else window.location.href = gmailUrl;
+        if (lead) lead.textContent = 'Gmail se je odprl v novem zavihku s pripravljenim sporočilom — preverite ga in kliknite »Pošlji«. Če niste prijavljeni, se najprej prijavite v svoj Google račun.';
+      }
 
       if (okBox) okBox.setAttribute('data-show', '');
     });
