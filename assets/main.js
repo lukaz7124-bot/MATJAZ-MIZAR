@@ -781,12 +781,40 @@
         '— poslano z www.mizarstvo-pesjak.si'
       ].join('\n');
 
-      window.location.href = 'mailto:' + PREJEMNIK +
-        '?subject=' + encodeURIComponent(zadeva) +
-        '&body=' + encodeURIComponent(telo);
+      var to = encodeURIComponent(PREJEMNIK);
+      var su = encodeURIComponent(zadeva);
+      var bo = encodeURIComponent(telo);
+
+      // Rezerva: veliko računalnikov z Windows nima nastavljenega e-poštnega
+      // programa in mailto tam ne naredi ničesar. Zato isto sporočilo ponudimo
+      // še v spletnem Gmailu in Outlooku ter za kopiranje.
+      var gmail = $('#ok-gmail');
+      var outlook = $('#ok-outlook');
+      if (gmail) gmail.href = 'https://mail.google.com/mail/?view=cm&fs=1&to=' + to + '&su=' + su + '&body=' + bo;
+      if (outlook) outlook.href = 'https://outlook.live.com/mail/0/deeplink/compose?to=' + to + '&subject=' + su + '&body=' + bo;
+      zadnjeSporocilo = 'Za: ' + PREJEMNIK + '\nZadeva: ' + zadeva + '\n\n' + telo;
+
+      window.location.href = 'mailto:' + PREJEMNIK + '?subject=' + su + '&body=' + bo;
 
       if (okBox) okBox.setAttribute('data-show', '');
     });
+
+    // Kopiranje celotnega sporočila v odložišče
+    var zadnjeSporocilo = '';
+    var copyBtn = $('#ok-copy');
+    if (copyBtn) {
+      var copyLabel = copyBtn.textContent;
+      if (!navigator.clipboard) copyBtn.hidden = true;
+      copyBtn.addEventListener('click', function () {
+        if (!zadnjeSporocilo || !navigator.clipboard) return;
+        navigator.clipboard.writeText(zadnjeSporocilo).then(function () {
+          copyBtn.textContent = 'sporočilo je kopirano ✓';
+          window.setTimeout(function () { copyBtn.textContent = copyLabel; }, 2500);
+        }, function () {
+          copyBtn.textContent = 'kopiranje ni uspelo';
+        });
+      });
+    }
   }
 
   /* ---------------------------------------------------------------------

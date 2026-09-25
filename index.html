@@ -1247,8 +1247,16 @@ try{if(!sessionStorage.getItem('mp-uvod'))h.classList.add('js-intro','pl-wait');
           </button>
 
           <div class="form__ok" id="form-ok" role="status">
-            Odpira se vaš e-poštni program z izpolnjenim sporočilom — za oddajo ga je treba še poslati.
-            Če se ni odprl, nas kar pokličite na <a href="tel:+38631425703" class="tel">031 425 703</a>.
+            <p>Odpira se vaš e-poštni program z izpolnjenim sporočilom — za oddajo ga je treba še poslati.</p>
+            <!-- Rezerva za računalnike brez nastavljenega e-poštnega programa:
+                 povezave napolni main.js z istim sporočilom kot mailto. -->
+            <p class="form__fallback">
+              Se ni nič odprlo? Pošljite prek
+              <a id="ok-gmail" href="https://mail.google.com/" target="_blank" rel="noopener">Gmaila</a>
+              ali <a id="ok-outlook" href="https://outlook.live.com/" target="_blank" rel="noopener">Outlooka</a>,
+              <button type="button" class="form__copy" id="ok-copy">kopirajte sporočilo</button>
+              ali nas pokličite na <a href="tel:+38631425703" class="tel">031 425 703</a>.
+            </p>
           </div>
 
           <p class="form__note">

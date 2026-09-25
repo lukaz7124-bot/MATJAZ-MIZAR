@@ -1382,6 +1382,19 @@ p  { margin: 0 0 var(--space-2); text-wrap: pretty; }
   font-size: 0.92rem;
 }
 .form__ok[data-show] { display: block; }
+.form__ok p { margin: 0; }
+.form__fallback { margin-top: 0.5rem !important; font-size: 0.86rem; }
+.form__ok a,
+.form__copy { color: inherit; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+/* Gumb, ki je videti kot povezava v besedilu */
+.form__copy {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
 
 /* Zemljevid pod privolitvijo za piškotke */
 .map-box {
